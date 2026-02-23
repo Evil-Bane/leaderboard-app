@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arena Score v4 | Pro Abyss</title>
+    <meta name="description" content="Ultra-premium 'Pro Abyss' competitive scoreboard app for Arena Score v4.">
+
+    <!-- CSS Dependencies -->
+    <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Video Background & Overlay -->
+    <video class="video-bg" autoplay loop muted playsinline>
+        <source src="bg.mp4" type="video/mp4">
+    </video>
+    <div class="video-overlay"></div>
+
+    <!-- 100vh Hero Section -->
+    <section id="hero-section">
+        <div class="hero-content">
+            <div class="hero-graphic">
+                <!-- 3D wireframe / Crown representation -->
+                <svg class="hero-crown" viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="goldGlow" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#FFD54F" />
+                            <stop offset="100%" stop-color="#F57F17" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M20 120 L40 40 L80 80 L100 10 L120 80 L160 40 L180 120 Z" fill="none"
+                        stroke="url(#goldGlow)" stroke-width="4" stroke-linejoin="round" />
+                    <rect x="15" y="130" width="170" height="20" rx="4" fill="none" stroke="url(#goldGlow)"
+                        stroke-width="4" />
+                </svg>
+            </div>
+            <h1 class="hero-title">ARENA SCORE <span class="v-badge">v4</span></h1>
+            <p class="hero-subtitle">The ultimate high-performance competitive leaderboard.</p>
+            <button id="start-match-btn" class="cta-btn magnetic-btn">
+                <span>Engage System</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="7 13 12 18 17 13"></polyline>
+                    <polyline points="7 6 12 11 17 6"></polyline>
+                </svg>
+            </button>
+        </div>
+        <div class="scroll-indicator">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <polyline points="19 12 12 19 5 12"></polyline>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Main Application Wrapper (Below the fold) -->
+    <main id="app-wrapper">
+
+        <!-- Header Section -->
+        <header id="app-header" class="panel assemble-item">
+            <div class="brand">
+                <svg class="brand-logo" viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg" width="28" height="22">
+                    <path d="M10 62 L22 18 L38 42 L50 4 L62 42 L78 18 L90 62 Z" fill="#fff" />
+                    <rect x="8" y="62" width="84" height="10" rx="4" fill="#fff" />
+                </svg>
+                <div class="brand-text">
+                    <h2>ARENA SCORE</h2>
+                </div>
+            </div>
+
+            <nav id="app-nav">
+                <button class="nav-tab active" data-tab="leaderboard">Dashboard</button>
+                <button class="nav-tab" data-tab="history">Timeline</button>
+            </nav>
+
+            <div class="match-timer-container">
+                <span class="timer-label">SESSION</span>
+                <span id="match-timer">00:00:00</span>
+            </div>
+        </header>
+
+        <!-- Stats Section -->
+        <section id="stats-container">
+            <div class="stat-card panel assemble-item">
+                <div class="stat-info">
+                    <span class="stat-label">TOTAL POINTS</span>
+                    <span class="stat-value" id="stat-total">0</span>
+                </div>
+            </div>
+
+            <div class="stat-card panel assemble-item">
+                <div class="stat-info">
+                    <span class="stat-label">PEAK SCORE</span>
+                    <span class="stat-value" id="stat-highest">0</span>
+                </div>
+            </div>
+
+            <div class="stat-card panel assemble-item">
+                <div class="stat-info">
+                    <span class="stat-label">AVG PACE</span>
+                    <span class="stat-value" id="stat-avg">0</span>
+                </div>
+            </div>
+
+            <div class="stat-card panel assemble-item">
+                <div class="stat-info">
+                    <span class="stat-label">ACTIVE STREAKS</span>
+                    <span class="stat-value" id="stat-streaks">0</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sticky Control Bar -->
+        <section id="control-bar" class="panel assemble-item">
+            <div class="input-group">
+                <input type="text" id="player-name-input" placeholder="Initialize player..." autocomplete="off">
+                <button class="btn btn-primary magnetic-btn" id="add-player-btn">
+                    <span>Add</span>
+                </button>
+            </div>
+
+            <div class="control-divider"></div>
+
+            <div class="step-toggle-group">
+                <span class="control-label">STEP</span>
+                <div class="segmented-control" id="increment-selector">
+                    <button class="segment active" data-value="1">+1</button>
+                    <button class="segment" data-value="5">+5</button>
+                    <button class="segment" data-value="10">+10</button>
+                </div>
+            </div>
+
+            <div class="control-divider"></div>
+
+            <div class="action-group">
+                <div class="round-display">
+                    <span class="round-text">ROUND</span>
+                    <span id="round-number">1</span>
+                </div>
+                <button class="btn btn-secondary magnetic-btn" id="next-round-btn">Advance</button>
+                <button class="btn btn-icon btn-danger magnetic-btn" id="reset-btn" title="System Reset">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                        <path d="M3 3v5h5"></path>
+                    </svg>
+                </button>
+            </div>
+        </section>
+
+        <!-- Leaderboard View -->
+        <section id="tab-leaderboard" class="tab-content active">
+            <div id="player-list"></div>
+
+            <div id="empty-state" class="panel assemble-item">
+                <div class="shimmer-ring"></div>
+                <h3>System Offline</h3>
+                <p>Initialize players to begin telemetry.</p>
+            </div>
+
+            <!-- Score Distribution (Bottom Section) -->
+            <div id="score-distribution-section" class="panel assemble-item hidden">
+                <div class="section-header">
+                    <h4>Power Distribution</h4>
+                </div>
+                <div id="distribution-chart"></div>
+            </div>
+        </section>
+
+        <!-- History View -->
+        <section id="tab-history" class="tab-content">
+            <div class="history-container panel">
+                <div class="section-header">
+                    <h4>Event Telemetry</h4>
+                </div>
+                <div id="history-empty">No events recorded.</div>
+                <div id="history-timeline"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Player Analytics Modal Pop-over -->
+    <div id="analytics-modal" class="modal-overlay hidden">
+        <div class="modal-container panel">
+            <button id="close-modal-btn" class="icon-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+
+            <div class="modal-header">
+                <div class="modal-player-avatar" id="modal-avatar"></div>
+                <div class="modal-player-titles">
+                    <h2 id="modal-player-name">Player Name</h2>
+                    <span id="modal-player-rank">Rank #1</span>
+                </div>
+            </div>
+
+            <div class="modal-stats-grid">
+                <div class="modal-stat-box">
+                    <span class="m-label">Current Score</span>
+                    <span class="m-val" id="modal-score">0</span>
+                </div>
+                <div class="modal-stat-box">
+                    <span class="m-label">Peak Score</span>
+                    <span class="m-val" id="modal-peak">0</span>
+                </div>
+                <div class="modal-stat-box">
+                    <span class="m-label">Win Rate</span>
+                    <div class="circular-progress">
+                        <svg viewBox="0 0 36 36" class="circ-svg">
+                            <path class="circ-bg" stroke-dasharray="100, 100"
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <path class="circ-fill" id="modal-winrate-fill" stroke-dasharray="0, 100"
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        </svg>
+                        <span class="circ-val" id="modal-winrate-text">0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-chart-container">
+                <span class="m-label">Performance Trajectory</span>
+                <div id="modal-line-chart">
+                    <!-- SVG Line Chart generated via JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS Dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Flip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
